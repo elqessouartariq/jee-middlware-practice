@@ -1,0 +1,2 @@
+com.tariqelqessouar.dao.DaoImpl
+com.tariqelqessouar.metier.MetierImpl
