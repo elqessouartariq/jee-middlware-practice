@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Patients Vue</title>
+</head>
+<body>
+    <h2>Patient's List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Malade</th>
+                <th>Score</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="patient : ${patients}">
+                <td th:text="${patient.id}"></td>
+                <td th:text="${patient.nom}"></td>
+                <td th:text="${patient.dateNaissance}"></td>
+                <td th:text="${patient.malade}"></td>
+                <td th:text="${patient.score}"></td>
+                <td>
+                    <a th:href="@{'/patients/' + ${patient.id}}">Details</a>
+                </td>
+            </tr>
+    </table>
+</body>
+</html>
