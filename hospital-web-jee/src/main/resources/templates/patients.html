@@ -3,31 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>Patients Vue</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="webjars/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" >
 </head>
 <body>
-    <h2>Patient's List</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Malade</th>
-                <th>Score</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="patient : ${patients}">
-                <td th:text="${patient.id}"></td>
-                <td th:text="${patient.nom}"></td>
-                <td th:text="${patient.dateNaissance}"></td>
-                <td th:text="${patient.malade}"></td>
-                <td th:text="${patient.score}"></td>
-                <td>
-                    <a th:href="@{'/patients/' + ${patient.id}}">Details</a>
-                </td>
-            </tr>
-    </table>
+    <div class="card">
+        <div class="card-body">
+            <form method="get" th:action="@{/}">
+                <label>keyword:</label>
+                <input type="text" name="keyword" th:value="${keyword}">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Malade</th>
+                    <th>Score</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="patient : ${patients}">
+                    <td th:text="${patient.id}"></td>
+                    <td th:text="${patient.nom}"></td>
+                    <td th:text="${patient.dateNaissance}"></td>
+                    <td th:text="${patient.malade}"></td>
+                    <td th:text="${patient.score}"></td>
+                    <td>
+                        <a onclick="return confirm('Are you sure?')" th:href="@{delete(id=${patient.id}, keyword=${keyword}, page=${currentPage})}" class="btn btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            <ul class="nav nav-pills">
+                <li th:each="page,status:${pages}">
+                    <a th:href="@{/(page=${status.index},keyword=${keyword})}"
+                       th:class="${currentPage==status.index}? 'btn btn-info ms-1' : 'btn btn-outline-info ms-1' "
+                       th:text="${status.index + 1}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
 </body>
 </html>
