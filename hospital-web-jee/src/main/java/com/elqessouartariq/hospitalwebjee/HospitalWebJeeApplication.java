@@ -19,8 +19,8 @@ public class HospitalWebJeeApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
-        patientRepository.save(new Patient(null, "Tariq", new Date(), false, 0));
-        patientRepository.save(new Patient(null, "Yassine", new Date(), false, 0));
+//
+//        patientRepository.save(new Patient(null, "Tariq", new Date(), false, 5));
+//        patientRepository.save(new Patient(null, "Yassine", new Date(), false, 99));
     }
 }

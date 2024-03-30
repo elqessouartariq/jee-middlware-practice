@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <title>Patients Vue</title>
@@ -7,6 +10,7 @@
     <link rel="stylesheet" href="webjars/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" >
 </head>
 <body>
+<div layout:fragment="content1">
     <div class="card">
         <div class="card-body">
             <form method="get" th:action="@{/}">
@@ -35,8 +39,14 @@
                     <td th:text="${patient.malade}"></td>
                     <td th:text="${patient.score}"></td>
                     <td>
-                        <a onclick="return confirm('Are you sure?')" th:href="@{delete(id=${patient.id}, keyword=${keyword}, page=${currentPage})}" class="btn btn-danger">
+                        <a onclick="return confirm('Are you sure?')"
+                           th:href="@{delete(id=${patient.id}, keyword=${keyword}, page=${currentPage})}"
+                           class="btn btn-danger">
                             <i class="bi bi-trash"></i>
+                        </a>
+                        <a th:href="@{editPatient(id=${patient.id}, keyword=${keyword}, page=${currentPage})}"
+                           class="btn btn-warning">
+                            <i class="bi bi-pencil"></i>
                         </a>
                     </td>
                 </tr>
@@ -50,6 +60,6 @@
             </ul>
         </div>
     </div>
-
+</div>
 </body>
 </html>
