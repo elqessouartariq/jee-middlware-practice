@@ -7,13 +7,13 @@
     <meta charset="UTF-8">
     <title>Form Patient</title>
     <link rel="stylesheet" href="/webjars/bootstrap/5.3.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="webjars/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" >
+    <link rel="stylesheet" href="/webjars/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" >
 </head>
 <body>
 <div layout:fragment="content1">
 
     <div class="col-md-6 offset-3">
-        <form method="post" th:action="@{/save(page=${page}, keyword=${keyword})}">
+        <form method="post" th:action="@{/admin/save(page=${page}, keyword=${keyword})}">
             <input type="hidden" th:value="${patient.id}" name="id">
             <div class="mb-3">
                 <label for="nom" class="form-label">Nom</label>

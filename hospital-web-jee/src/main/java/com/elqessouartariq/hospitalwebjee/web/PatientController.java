@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PatientController {
     private PatientRepository patientRepository;
-    @GetMapping(path = "/")
+    @GetMapping(path = "/user/")
     public String index(Model model,
                         @RequestParam(name = "page", defaultValue = "0") int page,
                         @RequestParam(name = "size", defaultValue = "4") int size,
@@ -34,32 +35,33 @@ public class PatientController {
         return "patients";
     }
 
-    @GetMapping(path = "/delete")
+    @GetMapping(path = "/admin/delete")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String delete(
             @RequestParam(name = "id") Long id,
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "keyword", defaultValue = "") String keyword)
     {
         patientRepository.deleteById(id);
-        return "redirect:/?page=" + page + "&keyword=" + keyword;
+        return "redirect:/user/?page=" + page + "&keyword=" + keyword;
     }
 
-    @GetMapping(path = "/formPatients")
+    @GetMapping(path = "/admin/formPatients")
     public String formPatient(Model model) {
         model.addAttribute("patient", new Patient());
         return "formPatients";
     }
 
-    @PostMapping(path = "/save")
+    @PostMapping(path = "/admin/save")
     public String save(Model model, @Valid Patient patient, BindingResult bindingResult,
                        @RequestParam(name = "page", defaultValue = "0") int page,
                        @RequestParam(name = "keyword", defaultValue = "") String keyword){
         if (bindingResult.hasErrors()) return "formPatients";
         patientRepository.save(patient);
-        return "redirect:/?page=" + page + "&keyword=" + keyword;
+        return "redirect:/user/?page=" + page + "&keyword=" + keyword;
     }
 
-    @GetMapping(path = "/editPatient")
+    @GetMapping(path = "/admin/editPatient")
     public String editPatient(Model model, Long id,
                               @RequestParam(name = "page", defaultValue = "0") int page,
                               @RequestParam(name = "keyword", defaultValue = "") String keyword){
@@ -71,4 +73,8 @@ public class PatientController {
         return "editPatients";
     }
 
+    @GetMapping(path = "/")
+    public String home() {
+        return "redirect:/user/";
+    }
 }
