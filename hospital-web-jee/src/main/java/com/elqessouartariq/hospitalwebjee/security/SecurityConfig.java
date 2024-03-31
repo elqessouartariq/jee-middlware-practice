@@ -10,14 +10,17 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    @Bean
+    //@Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager(PasswordEncoder passwordEncoder){
         String encodedPassword = passwordEncoder.encode("1234");
         System.out.println(encodedPassword);
@@ -27,11 +30,17 @@ public class SecurityConfig {
                 User.withUsername("admin").password(encodedPassword).roles("USER","ADMIN").build()
         );
     }
+
+    @Bean
+    public JdbcUserDetailsManager jdbcUserDetailsManager(DataSource dataSource){
+        return new JdbcUserDetailsManager(dataSource);
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
 //                .formLogin(Customizer.withDefaults())
-                .formLogin(fl->fl.loginPage("/login").permitAll())
+                .formLogin(fl->fl.loginPage("/login").defaultSuccessUrl("/").permitAll())
                 .authorizeHttpRequests(ar->ar.requestMatchers("/","/webjars/**").permitAll())
                 .authorizeHttpRequests(ar->ar.requestMatchers("/deletePatient/**").hasRole("ADMIN"))
                 .authorizeHttpRequests(ar->ar.requestMatchers("/admin/**").hasRole("ADMIN"))
