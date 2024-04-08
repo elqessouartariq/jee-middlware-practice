@@ -2,6 +2,7 @@ package com.elqessouartariq.hospitalwebjee;
 
 import com.elqessouartariq.hospitalwebjee.entities.Patient;
 import com.elqessouartariq.hospitalwebjee.repository.PatientRepository;
+import com.elqessouartariq.hospitalwebjee.security.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -22,7 +23,7 @@ public class HospitalWebJeeApplication {
         SpringApplication.run(HospitalWebJeeApplication.class, args);
     }
 
-    @Bean
+    //@Bean
     CommandLineRunner start(JdbcUserDetailsManager jdbcUserDetailsManager){
         PasswordEncoder passwordEncoder = passwordEncoder();
         return args -> {
@@ -33,6 +34,22 @@ public class HospitalWebJeeApplication {
             jdbcUserDetailsManager.createUser(User.withUsername("user1").password(passwordEncoder.encode("1234")).roles("USER").build());
             jdbcUserDetailsManager.createUser(User.withUsername("user2").password(passwordEncoder.encode("1234")).roles("USER").build());
             jdbcUserDetailsManager.createUser(User.withUsername("admin").password(passwordEncoder.encode("1234")).roles("USER","ADMIN").build());
+        };
+    }
+
+    @Bean
+    CommandLineRunner commandLineRunnerUserDetails(AccountService accountService){
+        return args -> {
+            accountService.addNewRole("USER");
+            accountService.addNewRole("ADMIN");
+            accountService.addNewUser("user1", "1234", "user1@gmail.com", "1234");
+            accountService.addNewUser("user2", "1234", "user2@gmail.com", "1234");
+            accountService.addNewUser("admin", "1234", "admin@gmail.com", "1234");
+
+            accountService.addRoleToUser("user1", "USER");
+            accountService.addRoleToUser("user2", "USER");
+            accountService.addRoleToUser("admin", "USER");
+            accountService.addRoleToUser("admin", "ADMIN");
         };
     }
 

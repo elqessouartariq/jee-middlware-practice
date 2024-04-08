@@ -1,5 +1,7 @@
 package com.elqessouartariq.hospitalwebjee.security;
 
+import com.elqessouartariq.hospitalwebjee.security.service.UserDetailServiceImpl;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -18,8 +20,9 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
+@AllArgsConstructor
 public class SecurityConfig {
-
+    private UserDetailServiceImpl userDetailServiceImpl;
     //@Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager(PasswordEncoder passwordEncoder){
         String encodedPassword = passwordEncoder.encode("1234");
@@ -31,7 +34,7 @@ public class SecurityConfig {
         );
     }
 
-    @Bean
+    //@Bean
     public JdbcUserDetailsManager jdbcUserDetailsManager(DataSource dataSource){
         return new JdbcUserDetailsManager(dataSource);
     }
@@ -46,8 +49,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(ar->ar.requestMatchers("/admin/**").hasRole("ADMIN"))
                 .authorizeHttpRequests(ar->ar.requestMatchers("/user/**").hasRole("USER"))
                 .authorizeHttpRequests(ar->ar.anyRequest().authenticated())
-
                 .exceptionHandling((exception)-> exception.accessDeniedPage("/notAuthorized"))
+                .userDetailsService(userDetailServiceImpl)
                 .build();
     }
 
